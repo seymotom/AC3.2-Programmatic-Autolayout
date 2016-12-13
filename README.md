@@ -17,10 +17,10 @@ Alternative to defining constraints in Storyboard
 ### Lesson Overview: 
 1. Understand the anatomy of a constraint
 2. Revisit some simple autolayout examples in storyboard
-3. Translate storyboard constraints into `NSLayoutConstraint` using three methods:
-  1. Long-form `init`
+3. Translate storyboard constraints using three methods:
+  1. `NSLayoutConstraint`
   2. `Visual Format Language` (VFL)
-  3. `NSLayoutDimension` & `NSLayoutAnchor`
+  3. `NSLayoutAnchor`
 4. Look at some common errors 
 5. View Debugger
 
@@ -73,4 +73,65 @@ Regardless of readability, let's go back to my situation: I'm asked to make a de
 Autolayout does away with having to calculate frames by being expressive in its relation to other views.
 
 ---
-### A
+### Anatomy of a Constraint
+
+![Formula - via Apple](https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/AutolayoutPG/Art/view_formula_2x.png)
+
+A constraint is, in essences, a linear equation with the format: 
+
+`item1.attribute = multiplier x item2.attribute + constant`
+
+For example, if we were trying to arrange two buttons such that they are right next to each other, with `8pt` between them, we could write: 
+
+`button2.leading = 1.0 x button1.trailing + 8.0`
+
+And since constraints are equations, not assignments, we can reverse them so long as we invert the multiplier and constant:
+
+`button1.trailing = 1.0 x button2.leading - 8.0`
+
+But where did we get `.leading` and .`trailing` from? There's a [list](https://developer.apple.com/reference/uikit/nslayoutattribute) we can check. 
+
+---
+### Minimum Satisfiable Constraints
+You need to ensure that you define a location and a size for your views, otherwise they are considered to be "ambiguous" and you will get warnings. 
+
+---
+### Constraint Priorities
+It is sometimes not possible for Autolayout to satisfy all of the constraints you've coded in. At that point, Autolayout goes through the constraints and chooses one to break in order to satisfy *some* of the constraints. But you can also set up a value hierarchy of which constraints are required or optional by giving them a value between 1 - 1000, 1 being the lowest and 1000 meaning the constraint is required. 
+
+If an optional constraint cannot be satisfied, it will just skip it and continue on to the rest. Generally, you can use the system defined priority values of `250` (low) `500` (medium) `750` (high) and `1000` (required).
+
+---
+### Content Hugging & Compression Resistance 
+
+In short:
+Content Hugging: how much you want to resist expanding (defaults to low/`250` because its better for content to expand than shrink if necessary)
+Compression Resistance: how much you want to resist growing (defaults to `750`)
+
+---
+### Defining Constraints Programmatically
+
+#### Layout Anchors (`NSLayoutAnchor`)
+*"Layout anchors let you create constraints in an easy-to-read, compact format. - Apple*
+
+#### `NSLayoutConstraint`
+Incredibly long and tedious to write. Very difficult to read and interpret as well. 
+
+#### Visual Format Language
+Lets you express constraints using a string representation. 
+
+1. Auto Layout prints constraints to the console using the visual format language; for this reason, the debugging messages look very similar to the code used to create the constraints.
+2. The visual format language lets you create multiple constraints at once, using a very compact expression.
+3. The visual format language lets you create only valid constraints.
+4. The notation emphasizes good visualization over completeness. Therefore some constraints (for example, aspect ratios) cannot be created using the visual format language.
+5. The compiler does not validate the strings in any way. You can discover mistakes through runtime testing only.
+
+---
+### Live Coding
+
+Let's take a look at all three ways of defining a constraint programmatically! 
+
+---
+### Exercises
+
+1. 
